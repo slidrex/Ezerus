@@ -3,6 +3,12 @@ using UnityEngine;
 public class PlayerBehaviour : Entity, IStaminaHolder
 {
     [field:SerializeField] public StaminaHolder StaminaHolder { get; set; }
+    public enum BlockingState
+    {
+        Blocked,
+        Free
+    }
+    public BlockingState BlockState { get; set; } = BlockingState.Free;
 
     protected override void Start()
     {

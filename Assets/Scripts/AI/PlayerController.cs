@@ -9,6 +9,7 @@ public class PlayerController : EntityMovement
     [SerializeField] private float sprintStaminaConsumption;
     [SerializeField] private KeyCode sprintKey;
     [SerializeField] private float sprintSpeedMultiplier;
+    protected new PlayerBehaviour Entity { get => base.Entity as PlayerBehaviour; }
     private float cameraRotation;
     protected override void Awake()
     {
@@ -18,15 +19,18 @@ public class PlayerController : EntityMovement
     protected override void Update()
     {
         IsGroundCheck();
-        
-        HandleControllerInputs();
-        
-        HandleCamera();
+        Vector3 moveInput = transform.right * Input.GetAxisRaw("Horizontal") + transform.forward * Input.GetAxisRaw("Vertical");
+        if(Entity.BlockState != PlayerBehaviour.BlockingState.Blocked)
+        {
+            HandleCamera();
+            
+        }else
+            moveInput = Vector3.zero;
+        HandleControllerInputs(moveInput);
         HandlePhysics();
     }
-    private void HandleControllerInputs()
+    private void HandleControllerInputs(Vector3 moveInput)
     {
-        Vector3 moveInput = transform.right * Input.GetAxisRaw("Horizontal") + transform.forward * Input.GetAxisRaw("Vertical");
         ResultMovementSpeed = BaseMovementSpeed;
         if(Input.GetAxisRaw("Vertical") > 0 && Input.GetKey(sprintKey))
         {
