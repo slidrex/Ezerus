@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Pumpkin Seeds
   Sprite: {fileID: 21300000, guid: 8b391e0bb6cc76e4b9ee7c053f471cba, type: 3}
-  MaxStackCount: 8
+  <MaxStackCount>k__BackingField: 8

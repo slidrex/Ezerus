@@ -7,46 +7,52 @@ namespace Ezerus.Inventory
         public delegate void InventoryUpdatedCallback(int index);
         public InventoryUpdatedCallback OnInventoryChanged; 
         private const int IndexNotFound = -1;
-        [SerializeField] private InventoryItem[] items;
-        public InventoryItem[] GetItemsClone() => items;
+        [SerializeField] public InventoryItem[] Items;
+        private void Start()
+        {
+            for(int i = 0; i < Items.Length; i++)
+            {
+                if(Items[i].Item != null) Items[i].Item = Instantiate(Items[i].Item);
+            }
+        }
         public bool AddItem(Item item)
         {
             int changeRepositoryIndex = -1;
-            if(item.GetMaxStackCount() <= 1)
+            if(item.IsStackable() == false)
             {
                 int index = GetFreeSlotIndex();
                 if(index == IndexNotFound) return false;
-                items[index] = new InventoryItem { Item = item, CurrentStackCount = 1 }; 
+                Items[index] = new InventoryItem { Item = item, CurrentStackCount = 1 }; 
                 changeRepositoryIndex = index;
             }
             else
             {
-                int index = GetFreeItemStack(item);
+                int index = GetFreeItemstack(item);
                 if(index == IndexNotFound)
                 {
                     index = GetFreeSlotIndex();
                     if(index == IndexNotFound) return false;
-                    items[index] = new InventoryItem { Item = item, CurrentStackCount = 1 };
+                    Items[index] = new InventoryItem { Item = item, CurrentStackCount = 1 };
                 }
                 else
-                    items[index].CurrentStackCount++;
+                    Items[index].CurrentStackCount++;
                 changeRepositoryIndex = index;
             }
             OnInventoryChanged.Invoke(changeRepositoryIndex);
             return true;
         }
-        private int GetFreeItemStack(Item item)
+        private int GetFreeItemstack(Item item)
         {
-            for(int i = 0; i < items.Length; i++)
-                if(items[i].Item.Equals(item) && items[i].CurrentStackCount < items[i].Item.GetMaxStackCount())
+            for(int i = 0; i < Items.Length; i++)
+                if(InventoryRenderer.AreTheSame(Items[i].Item, item) && Items[i].CurrentStackCount < Items[i].Item.GetMaxStackCount())
                     return i;
             
             return IndexNotFound;
         }
         private int GetFreeSlotIndex()
         {
-            for(int i = 0; i < items.Length; i++)
-                if(items[i].Item != null) return i;
+            for(int i = 0; i < Items.Length; i++)
+                if(Items[i].Item != null) return i;
             
             return IndexNotFound;
         }

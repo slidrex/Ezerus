@@ -17,5 +17,6 @@ namespace Ezerus
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
+        public static Vector2 GetMousePosition() => Input.mousePosition;
     }
 }

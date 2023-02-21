@@ -6,7 +6,8 @@ namespace Ezerus.Inventory
     {
         public string Name;
         public Sprite Sprite;
-        [SerializeField] private ushort MaxStackCount = 1;
+        public abstract ushort MaxStackCount { get; protected set; }
+        public bool IsStackable() => MaxStackCount > 1;
         public int GetMaxStackCount() => MaxStackCount;
     }
 }
