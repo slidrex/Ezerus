@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace Ezerus.Inventory
 {
@@ -26,15 +26,26 @@ namespace Ezerus.Inventory
             if(state == InventoryState.Dragging) HoldDraggingSlot();
         }
         private void HoldDraggingSlot() => holdingSlotInstance.transform.position = Ezerus.Functions.GetMousePosition();
-        public void OnSlotClicked(InventorySlot slot)
+        public void OnSlotClicked(InventorySlot slot, PointerEventData pointerData)
         {
             Inventory.InventoryItem slotAssociatedItem = attachedInventory.Items[slot.SlotIndex];
 
             bool beginDraggingItem = state == InventoryState.None && slotAssociatedItem.Item != null;
             bool clickWithHoldingItem = state == InventoryState.Dragging;
-            if(beginDraggingItem) 
+
+            if(beginDraggingItem)
             {
                 BeginDragItem(slot);
+                bool unstackMode = pointerData.button == PointerEventData.InputButton.Right;
+
+                if(unstackMode)
+                {
+                    UnstackSlotItems(slot, slotAssociatedItem);
+                }
+                else
+                {
+                    attachedInventory.Items[slot.SlotIndex] = default(Inventory.InventoryItem);
+                }
             }
             else if(clickWithHoldingItem)
             {
@@ -58,12 +69,27 @@ namespace Ezerus.Inventory
             }
             RenderSlot(slot);
         }
+        private void UnstackSlotItems(InventorySlot slot, Inventory.InventoryItem slotAssociatedItem)
+        {
+            int holdingItemCount = Mathf.CeilToInt((float)slotAssociatedItem.CurrentStackCount / 2);
+            int remainItemCount = slotAssociatedItem.CurrentStackCount - holdingItemCount;
+            
+            if(remainItemCount == 0) //If there is no remain items we remove item from slot
+            {
+                attachedInventory.Items[slot.SlotIndex] = default(Inventory.InventoryItem);
+            }
+            else //Otherwise, separete slot items
+            {
+                holdingItem.CurrentStackCount = holdingItemCount;
+                holdingSlotInstance.RenderSlot(holdingItem);
+                attachedInventory.Items[slot.SlotIndex].CurrentStackCount = remainItemCount;
+            }
+        }
         private void BeginDragItem(InventorySlot slot)
         {
             state = InventoryState.Dragging;
             holdingItem = attachedInventory.Items[slot.SlotIndex];
             holdingSlotInstance = Instantiate(slot, transform);
-            attachedInventory.Items[slot.SlotIndex] = default(Inventory.InventoryItem);
             holdingSlotInstance.ShowBackground(false);
         }
         private void SwapHoldingItems(InventorySlot slot, Inventory.InventoryItem slotItem)
