@@ -28,7 +28,7 @@ namespace Ezerus.Inventory
         private void HoldDraggingSlot() => holdingSlotInstance.transform.position = Ezerus.Functions.GetMousePosition();
         public void OnSlotClicked(InventorySlot slot, PointerEventData pointerData)
         {
-            Inventory.InventoryItem slotAssociatedItem = attachedInventory.Items[slot.SlotIndex];
+            Inventory.InventoryItem slotAssociatedItem = attachedInventory.GetItems()[slot.SlotIndex];
 
             bool beginDraggingItem = state == InventoryState.None && slotAssociatedItem.Item != null;
             bool clickWithHoldingItem = state == InventoryState.Dragging;
@@ -44,7 +44,7 @@ namespace Ezerus.Inventory
                 }
                 else
                 {
-                    attachedInventory.Items[slot.SlotIndex] = default(Inventory.InventoryItem);
+                    attachedInventory.SetInventoryItem(slot.SlotIndex, default(Inventory.InventoryItem));
                 }
             }
             else if(clickWithHoldingItem)
@@ -64,7 +64,7 @@ namespace Ezerus.Inventory
                 else
                 {
                     EndDragItem();
-                    attachedInventory.Items[slot.SlotIndex] = holdingItem;
+                    attachedInventory.SetInventoryItem(slot.SlotIndex, holdingItem);
                 }
             }
             RenderSlot(slot);
@@ -76,41 +76,45 @@ namespace Ezerus.Inventory
             
             if(remainItemCount == 0) //If there is no remain items we remove item from slot
             {
-                attachedInventory.Items[slot.SlotIndex] = default(Inventory.InventoryItem);
+                attachedInventory.SetInventoryItem(slot.SlotIndex, default(Inventory.InventoryItem));
             }
             else //Otherwise, separete slot items
             {
                 holdingItem.CurrentStackCount = holdingItemCount;
                 holdingSlotInstance.RenderSlot(holdingItem);
-                attachedInventory.Items[slot.SlotIndex].CurrentStackCount = remainItemCount;
+                Inventory.InventoryItem item = attachedInventory.GetItems()[slot.SlotIndex];
+                item.CurrentStackCount = remainItemCount;
+                attachedInventory.SetInventoryItem(slot.SlotIndex, item);
             }
         }
         private void BeginDragItem(InventorySlot slot)
         {
             state = InventoryState.Dragging;
-            holdingItem = attachedInventory.Items[slot.SlotIndex];
+            holdingItem = attachedInventory.GetItems()[slot.SlotIndex];
             holdingSlotInstance = Instantiate(slot, transform);
             holdingSlotInstance.ShowBackground(false);
         }
         private void SwapHoldingItems(InventorySlot slot, Inventory.InventoryItem slotItem)
         {
-            attachedInventory.Items[slot.SlotIndex] = holdingItem;
+            attachedInventory.SetInventoryItem(slot.SlotIndex, holdingItem);
             holdingItem = slotItem;
             holdingSlotInstance.RenderSlot(slotItem.Item.Sprite, slotItem.CurrentStackCount);
         }
         private void HandleStackableItems(int dropOnSlot)
         {
-            int extraItems = attachedInventory.Items[dropOnSlot].CurrentStackCount + holdingItem.CurrentStackCount - attachedInventory.Items[dropOnSlot].Item.MaxStackCount;
+            int extraItems = attachedInventory.GetItems()[dropOnSlot].CurrentStackCount + holdingItem.CurrentStackCount - attachedInventory.GetItems()[dropOnSlot].Item.MaxStackCount;
             if(extraItems <= 0) 
             {
-                attachedInventory.Items[dropOnSlot].CurrentStackCount += holdingItem.CurrentStackCount;
+                Inventory.InventoryItem item = attachedInventory.GetItems()[dropOnSlot];
+                item.CurrentStackCount += holdingItem.CurrentStackCount;
+                attachedInventory.SetInventoryItem(dropOnSlot, item);
                 EndDragItem();
             }
             else
             {
-                attachedInventory.Items[dropOnSlot].CurrentStackCount = attachedInventory.Items[dropOnSlot].Item.MaxStackCount;
+                attachedInventory.GetItems()[dropOnSlot].CurrentStackCount = attachedInventory.GetItems()[dropOnSlot].Item.MaxStackCount;
                 holdingItem.CurrentStackCount = extraItems;
-                holdingSlotInstance.RenderSlot(attachedInventory.Items[dropOnSlot].Item.Sprite, extraItems);
+                holdingSlotInstance.RenderSlot(attachedInventory.GetItems()[dropOnSlot].Item.Sprite, extraItems);
             }
         }
         private void EndDragItem()
@@ -151,7 +155,7 @@ namespace Ezerus.Inventory
         
         private void RenderSlot(InventorySlot slot)
         {
-            Inventory.InventoryItem item = attachedInventory.Items[slot.SlotIndex];
+            Inventory.InventoryItem item = attachedInventory.GetItems()[slot.SlotIndex];
             if(item.Item == null) slot.SetDefaultRender();
             else slot.RenderSlot(item.Item.Sprite, item.CurrentStackCount);
         }

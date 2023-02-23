@@ -7,13 +7,20 @@ namespace Ezerus.Inventory
         public delegate void InventoryUpdatedCallback(int index);
         public InventoryUpdatedCallback OnInventoryChanged; 
         private const int IndexNotFound = -1;
-        [SerializeField] public InventoryItem[] Items;
+        [SerializeField] private InventoryItem[] Items;
         private void Start()
         {
             for(int i = 0; i < Items.Length; i++)
             {
                 if(Items[i].Item != null) Items[i].Item = Instantiate(Items[i].Item);
             }
+        }
+        public InventoryItem[] GetItems() => Items;
+        public void SetInventoryItem(int index, InventoryItem item)
+        {
+            Inventory.InventoryItem oldItem = Items[index];
+            Items[index] = item;
+            if(oldItem.Equals(item) == false) OnInventoryChanged.Invoke(index);
         }
         public bool AddItem(Item item)
         {
