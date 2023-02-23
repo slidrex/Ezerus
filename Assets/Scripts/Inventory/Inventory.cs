@@ -4,6 +4,7 @@ namespace Ezerus.Inventory
 {
     public class Inventory : MonoBehaviour
     {
+        public Entity AttachedEntity;
         public delegate void InventoryUpdatedCallback(int index);
         public InventoryUpdatedCallback OnInventoryChanged; 
         private const int IndexNotFound = -1;

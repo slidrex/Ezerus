@@ -4,7 +4,7 @@ public class InteractManager : MonoBehaviour
 {
     public Entity AttachedEntity;
     [SerializeField] private float interactRadius;
-    [SerializeField] protected System.Collections.Generic.List<InteractableObject> interactableObjectsInRadius = new System.Collections.Generic.List<InteractableObject>();
+    protected System.Collections.Generic.List<InteractableObject> interactableObjectsInRadius = new System.Collections.Generic.List<InteractableObject>();
     private void Update()
     {
         UpdateInteractableObjects();

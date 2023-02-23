@@ -41,7 +41,7 @@ public class PlayerController : EntityMovement
         }
         Velocity = new Vector3(moveInput.x * ResultMovementSpeed, Velocity.y, moveInput.z * ResultMovementSpeed);
         
-        if(Input.GetKeyDown(KeyCode.Space) && IsGrounded) Jump();
+        if(Input.GetKey(KeyCode.Space) && IsGrounded) Jump();
     }
     private void Jump() => Velocity.y = jumpForce;
     private void HandleCamera()
