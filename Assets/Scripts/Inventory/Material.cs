@@ -5,6 +5,7 @@ namespace Ezerus.Inventory
     [CreateAssetMenu(menuName = "Inventory Item/Material")]
     public class Material : StackableItem
     {
+        public override Type ItemType => Type.Material;
         protected override void OnItemSelect(Entity entity)
         {
             Debug.Log("Material was selected!");

@@ -4,13 +4,15 @@ using UnityEngine.EventSystems;
 
 namespace Ezerus.Inventory
 {
-    public class InventorySlot : MonoBehaviour, IPointerClickHandler
+    public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Text index;
         [SerializeField] private Image background;
         [SerializeField] private Image itemImage;
         public int SlotIndex { get; private set; }
         public System.Action<InventorySlot, PointerEventData> OnPointerClickCallback;
+        public System.Action<InventorySlot, PointerEventData> OnPointerEnterCallback;
+        public System.Action<InventorySlot, PointerEventData> OnPointerExitCallback;
         public void OnPointerClick(PointerEventData eventData)
         {
             OnPointerClickCallback?.Invoke(this, eventData);
@@ -35,5 +37,8 @@ namespace Ezerus.Inventory
             itemImage.gameObject.SetActive(false);
             index.text = "";
         }
+
+        public void OnPointerEnter(PointerEventData eventData) => OnPointerEnterCallback?.Invoke(this, eventData);
+        public void OnPointerExit(PointerEventData eventData) => OnPointerExitCallback?.Invoke(this, eventData);
     }
 }

@@ -15,8 +15,12 @@ namespace Ezerus
                 isOpened = !isOpened;
                 if(isOpened) OnInventoryEnabled();
                 else OnInventoryDisabled();
-                menu.SetActive(isOpened);
+                EnableInventoryUI(isOpened);
             }
+        }
+        public void EnableInventoryUI(bool shouldEnable)
+        {
+            menu.SetActive(isOpened);
         }
         private void OnInventoryEnabled()
         {

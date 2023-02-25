@@ -4,8 +4,26 @@ namespace Ezerus.Inventory
 {
     public abstract class Item : ScriptableObject
     {
+        public enum Rarity
+        {
+            Common,
+            Rare,
+            Mythic,
+            Exotic   
+        }
+        public enum Type
+        {
+            Material,
+            Sword,
+            Staff,
+            Ability,
+            Money
+        }
         public string Name;
+        public string Description;
         public Sprite Sprite;
+        public Rarity Quality;
+        public abstract Type ItemType { get; }
         public abstract ushort MaxStackCount { get; protected set; }
         public bool IsStackable() => MaxStackCount > 1;
         public int GetMaxStackCount() => MaxStackCount;

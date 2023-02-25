@@ -9,9 +9,13 @@ namespace Ezerus.Inventory
         [SerializeField] private Transform hotBarHolder;
         [SerializeField] private Inventory attachedInventory;
         private InventorySlot[] slots;
-        [SerializeField] private InventoryState state;
+        private InventoryState state;
         private InventorySlot holdingSlotInstance;
         private Inventory.InventoryItem holdingItem;
+        [SerializeField] private InventoryDescriptionPanel descriptionPanel; 
+        [SerializeField] private Canvas canvas;
+        private RectTransform canvasRect;
+        private const float DescriptionPanelOffset = 200.0f;
         private enum InventoryState
         {
             None,
@@ -19,7 +23,9 @@ namespace Ezerus.Inventory
         }
         private void Awake()
         {
+            canvasRect = canvas.GetComponent<RectTransform>();
             InitSlots();
+            descriptionPanel.ClearBody();
         }
         private void Update()
         {
@@ -135,9 +141,48 @@ namespace Ezerus.Inventory
                 slots[hotbarSlotCount + i] = InitSlot(slotHolder.GetChild(i).GetComponent<InventorySlot>(), hotbarSlotCount + i);
             }
         }
+        private void OnSlotPointerEnter(InventorySlot slot, PointerEventData eventData)
+        {
+            if(attachedInventory.GetItems()[slot.SlotIndex].Item != null) SetupDescriptionPanel(slot);
+        }
+        private void OnSlotPointerrExit(InventorySlot slot, PointerEventData eventData)
+        {
+            descriptionPanel.ClearBody();
+            descriptionPanel.gameObject.SetActive(false);
+        }
+        private void SetupDescriptionPanel(InventorySlot slot)
+        {
+            Item item = attachedInventory.GetItems()[slot.SlotIndex].Item;
+            descriptionPanel.gameObject.SetActive(true);
+            descriptionPanel.SetName(item.Name, item.Quality.GetRarityColor());
+            descriptionPanel.PushBodyLine("Rarity: ", Color.white, item.Quality.ToString(), item.Quality.GetRarityColor());
+            descriptionPanel.PushBodyLine("Type: ", Color.white, item.ItemType.ToString(), item.ItemType.GetTypeColor());
+            descriptionPanel.PushBodyLine(item.Description, Color.grey);
+            SetDescriptionPanelPosition(slot);
+        }
+        private void SetDescriptionPanelPosition(InventorySlot slot)
+        {
+            Vector3[] corners = new Vector3[4];
+            canvasRect.GetWorldCorners(corners);
+            Vector2 direction = Vector4.zero;
+            foreach(Vector3 corner in corners)
+            {
+                Vector2 dist = slot.transform.position - corner;
+                
+                if(Mathf.Abs(dist.x) > Mathf.Abs(direction.x))  direction.x = dist.x;
+                if(Mathf.Abs(dist.y) > Mathf.Abs(direction.y)) direction.y = dist.y; 
+            }
+            
+            Vector2 panelOffset = Mathf.Abs(direction.x) > Mathf.Abs(direction.y) ? -Vector2.right * Mathf.Sign(direction.x) : -Vector2.up * Mathf.Sign(direction.y);
+            
+            descriptionPanel.transform.position = (Vector3)slot.transform.position + (Vector3)panelOffset * DescriptionPanelOffset * Ezerus.Functions.GetAspectRatio();
+
+        }
         private InventorySlot InitSlot(InventorySlot slot, int index)
         {
             slot.OnPointerClickCallback += OnSlotClicked;
+            slot.OnPointerEnterCallback += OnSlotPointerEnter;
+            slot.OnPointerExitCallback += OnSlotPointerrExit;
             slot.InitSlot(index);
             return slot;
         }

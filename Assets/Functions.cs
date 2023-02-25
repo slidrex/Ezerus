@@ -17,6 +17,7 @@ namespace Ezerus
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
+        public static float GetAspectRatio() => Camera.main.aspect;
         public static Vector2 GetMousePosition() => Input.mousePosition;
     }
 }
