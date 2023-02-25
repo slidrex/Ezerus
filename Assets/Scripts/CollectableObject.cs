@@ -1,14 +1,14 @@
 using UnityEngine;
+using Ezerus.Inventory;
 
 public class CollectableObject : MonoBehaviour
 {
-    [Header("Effects")]
+    [Header("Collect Effects")]
     [SerializeField] private GameObject collectEffect;
     [SerializeField] private float timeToDestroyEffect = 1;
-    
     protected virtual void Start() {}
     protected virtual void Update() {}
-    protected virtual void OnCollect()
+    protected virtual void OnCollect(Inventory inventory)
     {
         if(collectEffect != null)
         {
@@ -17,16 +17,13 @@ public class CollectableObject : MonoBehaviour
         }
     }
 
-    protected virtual void OnCollisionEnter(Collision collision)
+    protected virtual void OnTriggerEnter(Collider collider)
     {
-        if(collision.gameObject.GetComponent<PlayerController>() != null)
+        if(collider.TryGetComponent<Inventory>(out Inventory inventory))
         {
-            OnCollect();
+            OnCollect(inventory);
             Destroy(gameObject);
         }
     }
-    protected virtual void OnDestroy()
-    {
-
-    }
+    protected virtual void OnDestroy() {}
 }

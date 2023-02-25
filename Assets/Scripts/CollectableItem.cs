@@ -1,20 +1,14 @@
 using UnityEngine;
 using Ezerus.Inventory;
+
 public class CollectableItem : CollectableObject
 {
-    [Header("Other")]
+    [Header("Item")]
     [SerializeField] private Item contentItem;
-    private Inventory inventory;
 
-    protected override void Start()
+    protected override void OnCollect(Inventory inventory)
     {
-        base.Start();
-        inventory = FindObjectOfType<Inventory>();
-    }
-
-    protected override void OnCollect()
-    {
-        base.OnCollect();
+        base.OnCollect(inventory);
         inventory.AddItem(contentItem);
         Destroy(gameObject);
     }

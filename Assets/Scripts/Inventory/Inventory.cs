@@ -52,7 +52,7 @@ namespace Ezerus.Inventory
         private int GetFreeItemstack(Item item)
         {
             for(int i = 0; i < Items.Length; i++)
-                if(InventoryRenderer.AreTheSame(Items[i].Item, item) && Items[i].CurrentStackCount < Items[i].Item.GetMaxStackCount())
+                if((Items[i].Item != null && InventoryRenderer.AreTheSame(Items[i].Item, item) && Items[i].CurrentStackCount < Items[i].Item.GetMaxStackCount()))
                     return i;
             
             return IndexNotFound;
@@ -60,7 +60,7 @@ namespace Ezerus.Inventory
         private int GetFreeSlotIndex()
         {
             for(int i = 0; i < Items.Length; i++)
-                if(Items[i].Item != null) return i;
+                if(Items[i].Item == null) return i;
             
             return IndexNotFound;
         }
