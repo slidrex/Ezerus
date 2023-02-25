@@ -4,7 +4,7 @@ namespace Ezerus
 {
     public class PlayerMenuOpenHandler : MonoBehaviour
     {
-        [SerializeField] private PlayerBehaviour player;
+        [SerializeField] private Player player;
         [SerializeField] private GameObject menu;
         [SerializeField] private KeyCode toggleKey;
         private bool isOpened;
@@ -25,13 +25,13 @@ namespace Ezerus
         private void OnInventoryEnabled()
         {
             Functions.EnableCursor(true);
-            player.BlockState = PlayerBehaviour.BlockingState.Blocked;
+            player.BlockState = Player.BlockingState.Blocked;
             
         }
         private void OnInventoryDisabled()
         {
             Functions.EnableCursor(false);
-            player.BlockState = PlayerBehaviour.BlockingState.Free;
+            player.BlockState = Player.BlockingState.Free;
         }
     }
 }

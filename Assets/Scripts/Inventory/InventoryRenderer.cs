@@ -27,6 +27,10 @@ namespace Ezerus.Inventory
             InitSlots();
             descriptionPanel.ClearBody();
         }
+        private void OnDisable()
+        {
+
+        }
         private void Update()
         {
             if(state == InventoryState.Dragging) HoldDraggingSlot();
@@ -73,6 +77,8 @@ namespace Ezerus.Inventory
                     attachedInventory.SetInventoryItem(slot.SlotIndex, holdingItem);
                 }
             }
+            if(state == InventoryState.Dragging && descriptionPanel.gameObject.activeSelf) descriptionPanel.gameObject.SetActive(false);
+            else if(state == InventoryState.None && !descriptionPanel.gameObject.activeSelf && attachedInventory.GetItems()[slot.SlotIndex].Item != null) SetupDescriptionPanel(slot);
             RenderSlot(slot);
         }
         private void UnstackSlotItems(InventorySlot slot, Inventory.InventoryItem slotAssociatedItem)
@@ -152,6 +158,7 @@ namespace Ezerus.Inventory
         }
         private void SetupDescriptionPanel(InventorySlot slot)
         {
+            descriptionPanel.ClearBody();
             Item item = attachedInventory.GetItems()[slot.SlotIndex].Item;
             descriptionPanel.gameObject.SetActive(true);
             descriptionPanel.SetName(item.Name, item.Quality.GetRarityColor());

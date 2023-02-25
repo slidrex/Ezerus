@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerBehaviour : Entity, IStaminaHolder
+public class Player : Entity, IStaminaHolder
 {
     [field:SerializeField] public StaminaHolder StaminaHolder { get; set; }
     public enum BlockingState
