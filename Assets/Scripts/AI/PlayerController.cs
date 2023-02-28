@@ -18,14 +18,10 @@ public class PlayerController : EntityMovement
     }
     protected override void Update()
     {
+        base.Update();
         IsGroundCheck();
         Vector3 moveInput = transform.right * Input.GetAxisRaw("Horizontal") + transform.forward * Input.GetAxisRaw("Vertical");
-        if(Entity.BlockState != Player.BlockingState.Blocked)
-        {
-            HandleCamera();
-            
-        }else
-            moveInput = Vector3.zero;
+        
         HandleControllerInputs(moveInput);
         HandlePhysics();
     }
@@ -39,12 +35,12 @@ public class PlayerController : EntityMovement
                 ResultMovementSpeed = BaseMovementSpeed * sprintSpeedMultiplier;
             }
         }
-        Velocity = new Vector3(moveInput.x * ResultMovementSpeed, Velocity.y, moveInput.z * ResultMovementSpeed);
+        MoveVector = new Vector3(moveInput.x * ResultMovementSpeed, MoveVector.y, moveInput.z * ResultMovementSpeed);
         
-        if(Input.GetKey(KeyCode.Space) && IsGrounded) Jump();
+        if(Input.GetKey(KeyCode.Space) && IsGrounded && BlockMovement == false) Jump();
     }
-    private void Jump() => Velocity.y = jumpForce;
-    private void HandleCamera()
+    private void Jump() => ProcessedGravity = jumpForce;
+    protected override void HandleControllerRotation()
     {
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");

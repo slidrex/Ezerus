@@ -8,35 +8,45 @@ namespace Ezerus.UI
         [SerializeField] private Transform itemsHolder;
         [SerializeField] private KeyCode nextItemKey;
         [SerializeField] private KeyCode previousItemKey;
+        public RectTransform RectTransform { get; private set; }
         public int SelectedSlot { get; private set; }
         private TraderUIItem[] items;
-        [SerializeField] private Animation animation;
+        [SerializeField] private Animation _animation;
         private void Awake()
         {
+            RectTransform = GetComponent<RectTransform>();
             InitItems();
         }
         private void Start()
         {
             UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(itemsHolder.GetComponent<RectTransform>());
-            FindObjectOfType<Player>().BlockState = Player.BlockingState.Blocked; int blockbeh;
-            SelectedSlot = 0;
+            
+            SelectSlot(0);
             itemsHolder.position += GetDistanceToSelectZone(GetSelectedSlotPosition());
         }
         private void Update()
         {
-            if(Input.GetKeyDown(nextItemKey) && !animation.InAnimation && SelectedSlot < items.Length - 1) SwitchItem(1);
-            if(Input.GetKeyDown(previousItemKey) && !animation.InAnimation && SelectedSlot > 0) SwitchItem(-1);
-            if(animation.InAnimation) animation.UpdateAnimation();
+            if(Input.GetKeyDown(nextItemKey) && !_animation.InAnimation && SelectedSlot < items.Length - 1) SwitchItem(1);
+            if(Input.GetKeyDown(previousItemKey) && !_animation.InAnimation && SelectedSlot > 0) SwitchItem(-1);
+            if(_animation.InAnimation) _animation.UpdateAnimation();
         }
         private void SwitchItem(int offset)
         {
+            if(items[SelectedSlot].Selected) items[SelectedSlot].PlaySelectAnimation();
             int targetSlot = SelectedSlot + offset;
-            animation.BeginAnimation(targetSlot, itemsHolder.position + GetDistanceToSelectZone(items[targetSlot].transform.position), itemsHolder);
-            animation.AnimationEndCallback += OnAnimationEnd;
+            _animation.BeginAnimation(targetSlot, itemsHolder.position + GetDistanceToSelectZone(items[targetSlot].transform.position), itemsHolder);
+            items[targetSlot].PlaySelectAnimation();
+            _animation.AnimationEndCallback += OnAnimationEnd;
+        }
+        private void SelectSlot(int newSlot)
+        {
+            if(items[SelectedSlot].Selected) items[SelectedSlot].PlaySelectAnimation();
+            items[newSlot].PlaySelectAnimation();
+            SelectedSlot = newSlot;
         }
         private void OnAnimationEnd()
         {
-            SelectedSlot = animation.TargetSlot;
+            SelectedSlot = _animation.TargetSlot;
         }
 
         private Vector3 GetSelectedSlotPosition() => items[SelectedSlot].transform.position;

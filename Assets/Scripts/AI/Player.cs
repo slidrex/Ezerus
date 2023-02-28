@@ -1,15 +1,10 @@
+using Ezerus.UI;
 using UnityEngine;
 
-public class Player : Entity, IStaminaHolder
+public class Player : Entity, IStaminaHolder, Ezerus.UI.IUIHolder
 {
     [field:SerializeField] public StaminaHolder StaminaHolder { get; set; }
-    public enum BlockingState
-    {
-        Blocked,
-        Free
-    }
-    public BlockingState BlockState { get; set; } = BlockingState.Free;
-
+    [field:SerializeField] public UIRenderer UIRenderer {get; private set; }
     protected override void Start()
     {
         Cursor.visible = false;
@@ -17,7 +12,6 @@ public class Player : Entity, IStaminaHolder
     }
     protected override void Update()
     {
-        
     }
     protected override void OnDie()
     {

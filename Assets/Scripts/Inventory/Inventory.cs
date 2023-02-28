@@ -16,6 +16,18 @@ namespace Ezerus.Inventory
                 if(Items[i].Item != null) Items[i].Item = Instantiate(Items[i].Item);
             }
         }
+        public int GetItemsCount(Item item)
+        {
+            int count = 0;
+            foreach(InventoryItem inventoryItem in Items)
+            {
+                if(InventoryRenderer.AreTheSame(inventoryItem.Item, item))
+                {
+                    count += inventoryItem.CurrentStackCount;
+                }
+            }
+            return count;
+        }
         public InventoryItem[] GetItems() => Items;
         public void SetInventoryItem(int index, InventoryItem item)
         {

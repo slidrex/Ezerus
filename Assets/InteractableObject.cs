@@ -19,4 +19,12 @@ public class InteractableObject : MonoBehaviour
     {
 
     }
+    public virtual void OnInteractBeginToggle(InteractManager interactEntity)
+    {
+        
+    }
+    public virtual void OnInteractEndToggle(InteractManager interactEntity)
+    {
+        
+    }
 }

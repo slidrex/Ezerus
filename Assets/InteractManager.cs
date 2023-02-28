@@ -4,10 +4,44 @@ public class InteractManager : MonoBehaviour
 {
     public Entity AttachedEntity;
     [SerializeField] private float interactRadius;
+    [SerializeField] private KeyCode interactionKey;
+    public InteractableObject InteractObject { get; private set; }
+    public bool InInteraction { get => InteractObject != null; }
     protected System.Collections.Generic.List<InteractableObject> interactableObjectsInRadius = new System.Collections.Generic.List<InteractableObject>();
     private void Update()
     {
         UpdateInteractableObjects();
+        if((Input.GetKeyDown(interactionKey) || Input.GetKeyDown(KeyCode.Escape)) && InInteraction)
+        {
+            EndInteraction();
+        }
+        else if(Input.GetKeyDown(interactionKey) && interactableObjectsInRadius.Count > 0 && InInteraction == false && AttachedEntity.ContainsRule(IRuleHandler.Rule.BlockInteraction) == false)
+        {
+            AttachedEntity.AddRule(IRuleHandler.Rule.BlockInteraction);
+            InteractObject = GetNearestInteractableObject();
+            InteractObject.OnInteractBeginToggle(this);
+        }
+    }
+    public void EndInteraction()
+    {
+        AttachedEntity.RemoveRule(IRuleHandler.Rule.BlockInteraction);
+        InteractObject.OnInteractEndToggle(this);
+        InteractObject = null;
+    }
+    private InteractableObject GetNearestInteractableObject()
+    {
+        float nearestSqrDistance = (interactableObjectsInRadius[0].transform.position - transform.position).sqrMagnitude;
+        int targetIndex = 0;
+        for(int i = 1; i < interactableObjectsInRadius.Count; i++)
+        {
+            float currentSqrDist = (interactableObjectsInRadius[i].transform.position - transform.position).sqrMagnitude;
+            if(currentSqrDist <= nearestSqrDistance)
+            {
+                nearestSqrDistance = currentSqrDist;
+                targetIndex = i;
+            }
+        }
+        return interactableObjectsInRadius[targetIndex];
     }
     private void UpdateInteractableObjects()
     {
@@ -21,7 +55,6 @@ public class InteractManager : MonoBehaviour
 
             if(entryObject != null && interactableObjectsInRadius.Contains(entryObject) == false)
             {
-            print(hit.collider.name);
                 entryObject.OnInteractEntityEnterZone(this);
                 interactableObjectsInRadius.Add(entryObject);
             }
