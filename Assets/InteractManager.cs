@@ -19,13 +19,13 @@ public class InteractManager : MonoBehaviour
         {
             AttachedEntity.AddRule(IRuleHandler.Rule.BlockInteraction);
             InteractObject = GetNearestInteractableObject();
-            InteractObject.OnInteractBeginToggle(this);
+            InteractObject.InteractBeginToggle(this);
         }
     }
     public void EndInteraction()
     {
         AttachedEntity.RemoveRule(IRuleHandler.Rule.BlockInteraction);
-        InteractObject.OnInteractEndToggle(this);
+        InteractObject.InteractEndToggle(this);
         InteractObject = null;
     }
     private InteractableObject GetNearestInteractableObject()
@@ -55,7 +55,7 @@ public class InteractManager : MonoBehaviour
 
             if(entryObject != null && interactableObjectsInRadius.Contains(entryObject) == false)
             {
-                entryObject.OnInteractEntityEnterZone(this);
+                entryObject.InteractEntityEnterZone(this);
                 interactableObjectsInRadius.Add(entryObject);
             }
         }
@@ -66,9 +66,9 @@ public class InteractManager : MonoBehaviour
             
             if(distance.sqrMagnitude > interactRadius * interactRadius)
             {
-                iterationObject.OnInteractEntityLeftZone(this);
+                iterationObject.InteractEntityLeftZone(this);
                 interactableObjectsInRadius.RemoveAt(i);
-            } else iterationObject.OnInteractEntityInZone(this);
+            } else iterationObject.InteractEntityInZone(this);
         }
 
     }

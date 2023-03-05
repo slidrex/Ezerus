@@ -31,7 +31,7 @@ public class EntityMovement : MonoBehaviour
     ///<summary>Method for rotation handling if there is no active restrictions rules.</summary>
     protected virtual void HandleControllerRotation() {}
     protected virtual void Start() {}
-    protected virtual void Update() 
+    protected virtual void Update()
     {
         if(BlockCamera == false)
             HandleControllerRotation();

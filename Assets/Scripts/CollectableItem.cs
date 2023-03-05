@@ -4,7 +4,7 @@ using Ezerus.Inventory;
 public class CollectableItem : CollectableObject
 {
     [Header("Item")]
-    [SerializeField] private Item contentItem;
+    [SerializeField] private Inventory.StackItem contentItem;
 
     protected override void OnCollect(Inventory inventory)
     {

@@ -22,7 +22,9 @@ namespace Ezerus
         }
         public void EnableInventoryUI(bool shouldEnable)
         {
-            Renderer.EnableUIMode(shouldEnable);
+            if(shouldEnable)
+                Renderer.EnableUIMode(RenderUI.Inventory);
+            else Renderer.DisableUIMode();
         }
         private void OnInventoryEnabled()
         {

@@ -24,9 +24,9 @@ namespace Ezerus.Inventory
             itemImage.sprite = image;
             index.text = count > 1 ? count.ToString() : "";
         }
-        public void RenderSlot(Inventory.InventoryItem item)
+        public void RenderSlot(Inventory.StackItem item)
         {
-            RenderSlot(item.Item.Sprite, item.CurrentStackCount);
+            RenderSlot(item.Item.Sprite, item.StackCount);
         }
         public void ShowBackground(bool show)
         {

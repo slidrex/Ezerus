@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79500ece4afa1074cb086d9120cf465d, type: 3}
   m_Name: Pumpkin_seeds
   m_EditorClassIdentifier: 
-  Name: Pumpkin Seeds
+  Name: Pumpkin seeds
   Description: Uses for food crafting purposes
   Sprite: {fileID: 21300000, guid: 8b391e0bb6cc76e4b9ee7c053f471cba, type: 3}
   Quality: 0

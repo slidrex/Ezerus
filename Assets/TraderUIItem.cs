@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Ezerus.UI
+namespace Ezerus.Trader
 {
     public class TraderUIItem : MonoBehaviour
     {
@@ -14,17 +14,18 @@ namespace Ezerus.UI
         [SerializeField] private Text price;
         [SerializeField] private Image priceImage;
         [SerializeField] private Image itemImage;
+        public int SlotIndex;
         public bool PlaySelectAnimation()
         {
             Selected = !Selected;
             inAnimation = true;
             return Selected;
         }
-        public void RenderItem(uint price, Sprite priceImage, Sprite itemImage)
+        public void RenderItem(Trader.TraderItem item)
         {
-            this.price.text = price.ToString();
-            this.priceImage.sprite = priceImage;
-            this.itemImage.sprite = itemImage;
+            this.price.text = item.Price.ToString();
+            this.priceImage.sprite = item.PriceItem.Sprite;
+            this.itemImage.sprite = item.SellItem.Item.Sprite;
         }
         private void Update()
         {

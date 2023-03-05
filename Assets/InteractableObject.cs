@@ -3,28 +3,37 @@ using UnityEngine;
 public class InteractableObject : MonoBehaviour
 {
     [SerializeField] private Transform interactPoint;
+    protected InteractManager InteractEntity { get; private set; }
     private void Awake()
     {
         if(interactPoint == null) interactPoint = transform;
     }
-    public virtual void OnInteractEntityEnterZone(InteractManager interactEntity)
+    public void InteractEntityEnterZone(InteractManager interactEntity)
     {
-        print("Interact entityh entered the zone");
+        OnInteractEntityEnterZone();
     }
-    public virtual void OnInteractEntityLeftZone(InteractManager interactEntity)
+    public void InteractEntityLeftZone(InteractManager interactEntity)
     {
-        print("Interact entityh left the zone");
+        OnInteractEntityLeftZone();
     }
-    public virtual void OnInteractEntityInZone(InteractManager interactEntity)
+    public void InteractEntityInZone(InteractManager interactEntity)
     {
-
+        OnInteractEntityInZone();
     }
-    public virtual void OnInteractBeginToggle(InteractManager interactEntity)
+    public void InteractBeginToggle(InteractManager interactEntity)
     {
+        InteractEntity = interactEntity;
+        OnInteractEntityBeginToggle();
         
     }
-    public virtual void OnInteractEndToggle(InteractManager interactEntity)
+    public void InteractEndToggle(InteractManager interactEntity)
     {
-        
+        OnInteractEntityEndToggle();
+        InteractEntity = null;
     }
+    protected virtual void OnInteractEntityEnterZone() {}
+    protected virtual void OnInteractEntityLeftZone() {}
+    protected virtual void OnInteractEntityInZone() {}
+    protected virtual void OnInteractEntityBeginToggle() {}
+    protected virtual void OnInteractEntityEndToggle() {}
 }

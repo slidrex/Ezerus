@@ -10,6 +10,7 @@ namespace Ezerus.Inventory
         public int SelectedSlot { get; private set; }
         [SerializeField] private KeyCode primaryUseKey;
         [SerializeField] private KeyCode secondaryUseKey;
+        [SerializeField] private HotbarSelectedItem itemNameDisplayer;
         private void InitSlots()
         {
             slots = new InventoryHotbarSlot[slotsContainer.childCount];
@@ -39,8 +40,8 @@ namespace Ezerus.Inventory
         }
         private void SelectedItemUsageInput()
         {
-            if(Input.GetKeyDown(primaryUseKey)) inventory.GetItems()[SelectedSlot].Item?.PrimaryUse(inventory.AttachedEntity);
-            else if(Input.GetKeyDown(secondaryUseKey)) inventory.GetItems()[SelectedSlot].Item?.SecondaryUse(inventory.AttachedEntity);
+            if(Input.GetKeyDown(primaryUseKey)) inventory.GetItem(SelectedSlot).Item?.PrimaryUse(inventory.AttachedEntity);
+            else if(Input.GetKeyDown(secondaryUseKey)) inventory.GetItem(SelectedSlot).Item?.SecondaryUse(inventory.AttachedEntity);
         }
         private void SelectSlotsInput()
         {
@@ -52,9 +53,13 @@ namespace Ezerus.Inventory
         }
         private void SelectSlot(int slot)
         {
-            inventory.GetItems()[SelectedSlot].Item?.Deselect(inventory.AttachedEntity);
+            Item newItem  = inventory.GetItemsClone()[slot].Item;
+            inventory.GetItemsClone()[SelectedSlot].Item?.Deselect(inventory.AttachedEntity);
             slots[SelectedSlot].SetActiveBorder(false);
-            inventory.GetItems()[slot].Item?.Select(inventory.AttachedEntity);
+            if(newItem != null)
+                itemNameDisplayer.Activate(newItem.Name);
+            newItem?.Select(inventory.AttachedEntity);
+
             slots[slot].SetActiveBorder(true);
             SelectedSlot = slot;
         }
@@ -65,10 +70,11 @@ namespace Ezerus.Inventory
         private void RenderSlot(int index)
         {
             InventoryHotbarSlot slot = slots[index];
-            Inventory.InventoryItem item = inventory.GetItems()[index];
+            Inventory.StackItem item = inventory.GetItemsClone()[index];
+            print(index);
             if(item.Item == null) slot.SetDefaultRender();
             else
-                slot.RenderSlot(item.Item.Sprite, item.CurrentStackCount);
+                slot.RenderSlot(item.Item.Sprite, item.StackCount);
         }
         private void RenderSlots()
         {

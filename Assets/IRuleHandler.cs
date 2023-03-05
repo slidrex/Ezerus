@@ -4,7 +4,8 @@ public interface IRuleHandler
     {
         BlockCamera,
         BlockMovement,
-        BlockInteraction
+        BlockInteraction,
+        BlockAbilities
     }
     public System.Collections.Generic.List<Rule> Rules { get; }
     public void AddRule(Rule rule);

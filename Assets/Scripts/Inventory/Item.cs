@@ -25,6 +25,7 @@ namespace Ezerus.Inventory
         public Rarity Quality;
         public abstract Type ItemType { get; }
         public abstract ushort MaxStackCount { get; protected set; }
+        public virtual void Update() {}
         public bool IsStackable() => MaxStackCount > 1;
         public int GetMaxStackCount() => MaxStackCount;
         public void PrimaryUse(Entity entity) => OnItemPrimaryUse(entity);
