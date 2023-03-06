@@ -6,8 +6,16 @@ public class CollectableObject : MonoBehaviour
     [Header("Collect Effects")]
     [SerializeField] private GameObject collectEffect;
     [SerializeField] private float timeToDestroyEffect = 1;
-    protected virtual void Start() {}
-    protected virtual void Update() {}
+    [SerializeField] private float amplitude = 1;
+    [SerializeField] private float value = 0;
+    protected virtual void Start()
+    {
+    }
+    protected virtual void Update()
+    {
+        
+        transform.Rotate(0, Mathf.Sin(1) * Time.deltaTime * amplitude, 0);
+    }
     protected virtual void OnCollect(Inventory inventory)
     {
         if(collectEffect != null)
