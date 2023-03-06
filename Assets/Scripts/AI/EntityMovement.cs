@@ -16,6 +16,7 @@ public class EntityMovement : MonoBehaviour
     [SerializeField] private float movementSpeed;
     protected bool BlockCamera { get; private set; }
     protected bool BlockMovement { get; private set; }
+    protected Animator Animator;
     protected virtual void Awake()
     {
         Entity.RuleChangeCallback += OnRuleChanged;
@@ -30,7 +31,10 @@ public class EntityMovement : MonoBehaviour
     }
     ///<summary>Method for rotation handling if there is no active restrictions rules.</summary>
     protected virtual void HandleControllerRotation() {}
-    protected virtual void Start() {}
+    protected virtual void Start()
+    {
+        Animator = GetComponent<Animator>();
+    }
     protected virtual void Update()
     {
         if(BlockCamera == false)

@@ -33,9 +33,15 @@ public class PlayerController : EntityMovement
             if(staminaHolder.StaminaHolder.TryConsume(Time.deltaTime * sprintStaminaConsumption))
             {
                 ResultMovementSpeed = BaseMovementSpeed * sprintSpeedMultiplier;
+                Animator.SetBool("IsSprint", true);
             }
         }
+        else if(Input.GetKeyUp(sprintKey))  Animator.SetBool("IsSprint", false);
+
         MoveVector = new Vector3(moveInput.x * ResultMovementSpeed, MoveVector.y, moveInput.z * ResultMovementSpeed);
+
+        Animator.SetInteger("MoveX", (int)MoveVector.x);
+        Animator.SetInteger("MoveZ", (int)MoveVector.z);
         
         if(Input.GetKey(KeyCode.Space) && IsGrounded && BlockMovement == false) Jump();
     }
