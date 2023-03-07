@@ -13,7 +13,12 @@ namespace Ezerus.Inventory
         {
             for(int i = 0; i < Items.Length; i++)
             {
-                if(Items[i].Item != null) Items[i].Item = Instantiate(Items[i].Item);
+                if(Items[i].Item != null) 
+                {
+                    Item item = Instantiate(Items[i].Item);
+                    item.OnAttach(AttachedEntity);
+                    Items[i].Item = item;
+                }
             }
         }
         private void Update()
@@ -79,6 +84,7 @@ namespace Ezerus.Inventory
         public void SetInventoryItem(int index, StackItem item)
         {
             Inventory.StackItem oldItem = Items[index];
+            item.Item.OnAttach(AttachedEntity);
             Items[index] = item;
             if(oldItem != null && oldItem.Equals(item) == false) OnInventoryChanged.Invoke(index);
         }

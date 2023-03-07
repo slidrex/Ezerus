@@ -16,6 +16,6 @@ MonoBehaviour:
   Description: Dashed forward
   Sprite: {fileID: 21300000, guid: 3e471b9fad7264146aa03aca58b27957, type: 3}
   Quality: 1
-  Cooldown: 3
   AbilityDuration: 0.15
+  <Cooldown>k__BackingField: 1
   DashSpeed: 60

@@ -1,10 +1,13 @@
 using Ezerus.UI;
 using UnityEngine;
 
-public class Player : Entity, IStaminaHolder, Ezerus.UI.IUIHolder
+public class Player : Entity, IStaminaHolder, Ezerus.UI.IUIHolder, ICooldownTableHandler
 {
     [field:SerializeField] public StaminaHolder StaminaHolder { get; set; }
     [field:SerializeField] public UIRenderer UIRenderer {get; private set; }
+
+    [field: SerializeField] public CooldownTable Table {get; private set;}
+
     public Ezerus.Inventory.Inventory.StackItem Item;
     protected override void Start()
     {

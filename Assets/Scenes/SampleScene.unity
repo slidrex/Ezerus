@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -873,6 +873,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5491901386537808209, guid: b5442c95fb75ece448ccfc5f4293f0ab, type: 3}
   m_PrefabInstance: {fileID: 205872681}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &266237508 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4851321753659806705, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
+  m_PrefabInstance: {fileID: 2190693442313530774}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98072642543316a449667a9a83f54fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &295124181
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,7 +1048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotsContainer: {fileID: 1983636991}
-  inventory: {fileID: 0}
+  inventory: {fileID: 266237508}
   primaryUseKey: 323
   secondaryUseKey: 324
   itemNameDisplayer: {fileID: 1822534779}
@@ -1722,6 +1733,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: map
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7197fad2b0b0f9545af7653939c31eb1, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7197fad2b0b0f9545af7653939c31eb1, type: 3}
 --- !u!1 &795800439
@@ -2279,6 +2294,25 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5491901386537808209, guid: b5442c95fb75ece448ccfc5f4293f0ab, type: 3}
   m_PrefabInstance: {fileID: 1045780131}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1095860322 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7197fad2b0b0f9545af7653939c31eb1, type: 3}
+  m_PrefabInstance: {fileID: 749330313}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1095860323
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1095860322}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6915116930832517723, guid: 7197fad2b0b0f9545af7653939c31eb1, type: 3}
 --- !u!1001 &1107415171
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3992,6 +4026,26 @@ PrefabInstance:
       propertyPath: owner
       value: 
       objectReference: {fileID: 2190693442313530775}
+    - target: {fileID: 17774149304699112, guid: 02d25af447ac1e64590c4351193cfbb7, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 17774149304699112, guid: 02d25af447ac1e64590c4351193cfbb7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 17774149304699112, guid: 02d25af447ac1e64590c4351193cfbb7, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 17774149304699113, guid: 02d25af447ac1e64590c4351193cfbb7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 38.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 17774149312458978, guid: 02d25af447ac1e64590c4351193cfbb7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 54.19995
+      objectReference: {fileID: 0}
     - target: {fileID: 17774149542909735, guid: 02d25af447ac1e64590c4351193cfbb7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -5.4

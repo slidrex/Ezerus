@@ -1,51 +1,48 @@
 using UnityEngine;
-using Ezerus.Inventory;
 
 namespace Ezerus.Inventory
 {
-    public class Ability : Item
+    public abstract class Ability : UsableItem
     {
         public override Type ItemType => Type.Ability;
         protected Entity User { get; private set; }
         public override ushort MaxStackCount { get; protected set; } = 1;
-        [SerializeField] protected int Cooldown;
-        private float timeSinceCooldown;
-        public bool ProcessCooldown { get; set; } = true;
         public float AbilityDuration;
         private float timeSinceAbilityUsed;
+        [field: SerializeField] protected override float Cooldown {get; set;}
         private bool isUsed;
+        private Ezerus.UI.CooldownTable cooldownTable;
+        public override void OnAttach(Entity entity)
+        {
+            User = entity;
+            cooldownTable = (User as Ezerus.UI.ICooldownTableHandler).Table;
+            StartCooldown();
+        }
+        public override void OnDetach(Entity entity)
+        {
+            User = null;
+        }
         protected override void OnItemSecondaryUse(Entity entity)
         {
-            bool shouldUse = OnAbilityUseRequest();
-            Debug.Log(name);
-            if(entity.ContainsRule(IRuleHandler.Rule.BlockAbilities) == false && timeSinceCooldown >= (float)Cooldown && shouldUse) 
-            {
-                Debug.Log("start!");
-                User = entity;
-                OnAbilityUse();
-            }
+            SendUseRequest();
         }
-        protected virtual bool OnAbilityUseRequest() => true;
+        protected override bool OnUseRequest() 
+        {
+            return User.ContainsRule(IRuleHandler.Rule.BlockAbilities) == false && isUsed == false;
+        }
         
-        private void OnAbilityUse()
+        protected override void OnUse()
         {
             OnAbilityBegin();
             isUsed = true;
-            timeSinceCooldown = 0.0f;
+            IsHandleCooldown = false;
+            ResetCooldown();
             timeSinceAbilityUsed = 0.0f;
         }
         public override void Update()
         {
-            if(ProcessCooldown) HandleCooldown();
+            base.Update();
             if(isUsed) HandleAbilityDuration();
-        }
-        private void HandleCooldown()
-        {
-            if(timeSinceCooldown < Cooldown) timeSinceCooldown += Time.deltaTime;
-            else 
-            {
-                ProcessCooldown = false;
-            }
         }
         private void HandleAbilityDuration()
         {
@@ -57,12 +54,13 @@ namespace Ezerus.Inventory
             else
             {
                 OnAbilityEnd();
-                User = null;
+                StartCooldown();
                 isUsed = false;
-                System.Func<float> getter = () => timeSinceCooldown;
-                int table;
-                FindObjectOfType<CooldownTable>().CreateItem(getter, Cooldown);
-                ProcessCooldown = true;
+                if(cooldownTable != null)
+                {
+                    System.Func<float> getter = () => timeSinceCooldown;
+                    cooldownTable.CreateItem(getter, Cooldown);
+                }
             }
         }
         protected virtual void OnAbilityBegin() {}

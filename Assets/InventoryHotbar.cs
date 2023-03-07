@@ -40,8 +40,8 @@ namespace Ezerus.Inventory
         }
         private void SelectedItemUsageInput()
         {
-            if(Input.GetKeyDown(primaryUseKey)) inventory.GetItem(SelectedSlot).Item?.PrimaryUse(inventory.AttachedEntity);
-            else if(Input.GetKeyDown(secondaryUseKey)) inventory.GetItem(SelectedSlot).Item?.SecondaryUse(inventory.AttachedEntity);
+            if(Input.GetKey(primaryUseKey)) inventory.GetItem(SelectedSlot).Item?.PrimaryUse(inventory.AttachedEntity);
+            else if(Input.GetKey(secondaryUseKey)) inventory.GetItem(SelectedSlot).Item?.SecondaryUse(inventory.AttachedEntity);
         }
         private void SelectSlotsInput()
         {

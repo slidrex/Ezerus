@@ -27,6 +27,8 @@ namespace Ezerus.Inventory
         public abstract ushort MaxStackCount { get; protected set; }
         public virtual void Update() {}
         public bool IsStackable() => MaxStackCount > 1;
+        public virtual void OnAttach(Entity entity) {}
+        public virtual void OnDetach(Entity entity) {}
         public int GetMaxStackCount() => MaxStackCount;
         public void PrimaryUse(Entity entity) => OnItemPrimaryUse(entity);
         public void SecondaryUse(Entity entity) => OnItemSecondaryUse(entity);
