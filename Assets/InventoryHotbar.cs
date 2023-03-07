@@ -42,6 +42,7 @@ namespace Ezerus.Inventory
         {
             if(Input.GetKey(primaryUseKey)) inventory.GetItem(SelectedSlot).Item?.PrimaryUse(inventory.AttachedEntity);
             else if(Input.GetKey(secondaryUseKey)) inventory.GetItem(SelectedSlot).Item?.SecondaryUse(inventory.AttachedEntity);
+            else if(Input.GetKeyUp(secondaryUseKey)) inventory.GetItem(SelectedSlot).Item?.SecondaryUseButtonUp(inventory.AttachedEntity);
         }
         private void SelectSlotsInput()
         {

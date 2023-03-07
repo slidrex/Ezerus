@@ -3,14 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Entity : MonoBehaviour, IRuleHandler
-{
+{ 
     [SerializeField] private int maxHealth;
     public int Health { get; private set; }
     public List<IRuleHandler.Rule> Rules { get; private set; }
     public Action<IRuleHandler.Rule> RuleChangeCallback { get; set; }
     protected virtual void Awake() => Rules = new List<IRuleHandler.Rule>();
-    protected virtual void Start() {}
+    private Dictionary<EntityAttribute.Attribute, EntityAttribute> attributes = new Dictionary<EntityAttribute.Attribute, EntityAttribute>();
+    public void RegisterAttribute(System.Action<float> set, System.Func<float> get, float sourceValue, EntityAttribute.Attribute tag) => attributes.Add(tag, new EntityAttribute(set, get, sourceValue));
+    public bool TryGetAttribute(EntityAttribute.Attribute tag, out EntityAttribute attribute) => attributes.TryGetValue(tag, out attribute);
+    public EntityAttribute GetAttribute(EntityAttribute.Attribute tag) => attributes[tag];
+    protected virtual void Start() 
+    {
+        RegisterAttributes();
+    }
     protected virtual void Update() {}
+    private void RegisterAttributes()
+    {
+        RegisterAttribute((float v) => maxHealth = (int)v, () => maxHealth, maxHealth, EntityAttribute.Attribute.MaxHealth);
+    }
     public void Damage(int damage)
     {
         Health -= damage;

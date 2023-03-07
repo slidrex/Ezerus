@@ -6,7 +6,13 @@ namespace Ezerus.Inventory
     public class Dash : Ability
     {
         public float DashSpeed;
-        private Vector3 moveVector; 
+        private Vector3 moveVector;
+        private CharacterController userController;
+        public override void OnAttach(Entity entity)
+        {
+            base.OnAttach(entity);
+            userController = User.GetComponent<CharacterController>();
+        }
         protected override void OnAbilityBegin()
         {
             User.AddRule(IRuleHandler.Rule.BlockMovement);
@@ -15,7 +21,7 @@ namespace Ezerus.Inventory
         }
         protected override void OnAbilityLoop()
         {
-            User.GetComponent<CharacterController>().Move(moveVector * DashSpeed * Time.deltaTime);
+            userController.Move(moveVector * DashSpeed * Time.deltaTime);
         }
         protected override void OnAbilityEnd()
         {

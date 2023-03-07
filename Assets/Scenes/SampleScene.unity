@@ -4152,6 +4152,10 @@ PrefabInstance:
       value: 1.49
       objectReference: {fileID: 0}
     - target: {fileID: 649130419944364268, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
+      propertyPath: <Table>k__BackingField
+      value: 
+      objectReference: {fileID: 1777341641}
+    - target: {fileID: 649130419944364268, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
       propertyPath: <UIRenderer>k__BackingField
       value: 
       objectReference: {fileID: 585843771}
@@ -4202,6 +4206,18 @@ PrefabInstance:
     - target: {fileID: 1867957458823258650, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4851321753659806705, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
+      propertyPath: Items.Array.data[1].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 8a9f9ed11f99e4e439ea149480a0cd45, type: 2}
+    - target: {fileID: 4851321753659806705, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
+      propertyPath: Items.Array.data[1].StackCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4985478434619422299, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
+      propertyPath: sprintSpeedMultiplier
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 9054907159715353629, guid: e0acd73520542094f98d643f46c0bcf9, type: 3}
       propertyPath: Renderer

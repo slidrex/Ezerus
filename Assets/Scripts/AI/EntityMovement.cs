@@ -11,8 +11,7 @@ public class EntityMovement : MonoBehaviour
     protected Vector3 MoveVector;
     protected float ProcessedGravity;
     [SerializeField] private LayerMask groundLayer;
-    public float BaseMovementSpeed { get; protected set; }
-    public float ResultMovementSpeed { get; protected set; }
+    public float MovementSpeed { get; protected set; }
     [SerializeField] private float movementSpeed;
     protected bool BlockCamera { get; private set; }
     protected bool BlockMovement { get; private set; }
@@ -20,8 +19,8 @@ public class EntityMovement : MonoBehaviour
     protected virtual void Awake()
     {
         Entity.RuleChangeCallback += OnRuleChanged;
-        BaseMovementSpeed = movementSpeed;
-        ResultMovementSpeed = BaseMovementSpeed;
+        MovementSpeed = movementSpeed;
+        Entity.RegisterAttribute((float v) => MovementSpeed = v, () => MovementSpeed, movementSpeed, EntityAttribute.Attribute.MovementSpeed);
         GravityScale = gravityScale;
     }
     private void OnRuleChanged(IRuleHandler.Rule rule)

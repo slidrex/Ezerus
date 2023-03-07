@@ -9,6 +9,7 @@ public class PlayerController : EntityMovement
     [SerializeField] private float sprintStaminaConsumption;
     [SerializeField] private KeyCode sprintKey;
     [SerializeField] private float sprintSpeedMultiplier;
+    private EntityAttribute.PercentClaim sprintClaim;
     protected new Player Entity { get => base.Entity as Player; }
     private float cameraRotation;
     protected override void Awake()
@@ -27,18 +28,29 @@ public class PlayerController : EntityMovement
     }
     private void HandleControllerInputs(Vector3 moveInput)
     {
-        ResultMovementSpeed = BaseMovementSpeed;
         if(Input.GetAxisRaw("Vertical") > 0 && Input.GetKey(sprintKey))
         {
             if(staminaHolder.StaminaHolder.TryConsume(Time.deltaTime * sprintStaminaConsumption))
             {
-                ResultMovementSpeed = BaseMovementSpeed * sprintSpeedMultiplier;
-                Animator.SetBool("IsSprint", true);
+                if(sprintClaim.NullOrDeleted())
+                {
+                    sprintClaim = Entity.GetAttribute(EntityAttribute.Attribute.MovementSpeed).AddPercent(sprintSpeedMultiplier);
+                    Animator.SetBool("IsSprint", true);
+                }
+            }
+            else
+            {
+                Animator.SetBool("IsSprint", false);
+                sprintClaim.TryRemove();
             }
         }
-        else if(Input.GetKeyUp(sprintKey))  Animator.SetBool("IsSprint", false);
+        else if(Input.GetKeyUp(sprintKey)) 
+        {
+            Animator.SetBool("IsSprint", false);
+            sprintClaim.TryRemove();
+        }
 
-        MoveVector = new Vector3(moveInput.x * ResultMovementSpeed, MoveVector.y, moveInput.z * ResultMovementSpeed);
+        MoveVector = new Vector3(moveInput.x * MovementSpeed, MoveVector.y, moveInput.z * MovementSpeed);
 
         Animator.SetInteger("MoveX", (int)MoveVector.x);
         Animator.SetInteger("MoveZ", (int)MoveVector.z);

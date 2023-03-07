@@ -9,17 +9,28 @@ public class Player : Entity, IStaminaHolder, Ezerus.UI.IUIHolder, ICooldownTabl
     [field: SerializeField] public CooldownTable Table {get; private set;}
 
     public Ezerus.Inventory.Inventory.StackItem Item;
+    private EntityAttribute.PercentClaim claim;
     protected override void Start()
     {
+        base.Start();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
     protected override void Update()
     {
+        base.Update();
         if(Input.GetKeyDown(KeyCode.Return))
         {
             Debug.Break();
-          //  GetComponent<Ezerus.Inventory.Inventory>().AddItem(Item);
+        }
+        if(Input.GetKeyDown(KeyCode.M))
+        {
+            TryGetAttribute(EntityAttribute.Attribute.MovementSpeed, out EntityAttribute attribute);
+            claim = attribute.AddPercent(-0.2f);
+        }
+        if(Input.GetKeyUp(KeyCode.M))
+        {
+            claim.Remove();
         }
     }
     protected override void OnDie()

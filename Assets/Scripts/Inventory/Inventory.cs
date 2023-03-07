@@ -16,6 +16,7 @@ namespace Ezerus.Inventory
                 if(Items[i].Item != null) 
                 {
                     Item item = Instantiate(Items[i].Item);
+                    item.UserInventoryPosition = i;
                     item.OnAttach(AttachedEntity);
                     Items[i].Item = item;
                 }
@@ -58,6 +59,16 @@ namespace Ezerus.Inventory
             }
             return count;
         }
+        public void RemoveAt(int index, int count)
+        {
+            int stackCount = Items[index].StackCount;
+            stackCount -= count;
+            if(stackCount < 0) throw new System.Exception("Stack is less than zero!");
+            else if(stackCount == 0) Items[index].Item = null;
+            
+            Items[index].StackCount = stackCount;
+            OnInventoryChanged.Invoke(index);
+        }
         public void RemoveItems(Item item, int requiredCount)
         {
             int index = 0;
@@ -73,6 +84,7 @@ namespace Ezerus.Inventory
                     else
                     {
                         requiredCount -= currentItem.StackCount;
+                        currentItem.Item = null;
                         currentItem.StackCount = 0;
                     }
                     OnInventoryChanged?.Invoke(index);
@@ -95,6 +107,7 @@ namespace Ezerus.Inventory
                 int index = GetFreeSlotIndex();
                 if(index == IndexNotFound) return false;
                 Items[index] = item;
+                item.Item.UserInventoryPosition = index;
                 OnInventoryChanged.Invoke(index);
                 return true;
             }
@@ -125,7 +138,8 @@ namespace Ezerus.Inventory
                     else if(newSlotPosition != IndexNotFound)
                     {
                         Items[newSlotPosition].Item = item.Item;
-                        
+                        item.Item.UserInventoryPosition = newSlotPosition;
+
                         if(unhandledItems <= item.Item.GetMaxStackCount())
                         {
                             Items[newSlotPosition].StackCount = unhandledItems;
@@ -144,7 +158,6 @@ namespace Ezerus.Inventory
                 }
                 if(unhandledItems == 0) return true;
                 return false;
-                
             }
         }
         public StackItem GetItem(int index)
