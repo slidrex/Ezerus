@@ -4,6 +4,11 @@ namespace Ezerus.Inventory
 {
     public class Inventory : MonoBehaviour
     {
+        public enum DetachType
+        {
+            Drop,
+            Destroyed
+        }
         public Entity AttachedEntity;
         public delegate void InventoryUpdatedCallback(int index);
         public InventoryUpdatedCallback OnInventoryChanged; 
@@ -13,13 +18,13 @@ namespace Ezerus.Inventory
         {
             for(int i = 0; i < Items.Length; i++)
             {
+                Items[i].Inventory = this;
                 if(Items[i].Item != null) 
                 {
                     Item item = Instantiate(Items[i].Item);
-                    item.UserInventoryPosition = i;
-                    item.OnAttach(AttachedEntity);
-                    Items[i].Item = item;
+                    Items[i].InsertItem(item);
                 }
+                Items[i].UserInventoryPosition = i;
             }
         }
         private void Update()
@@ -38,10 +43,10 @@ namespace Ezerus.Inventory
             StackItem[] items = new StackItem[Items.Length];
             for(int i = 0; i < Items.Length; i++)
             {
-                items[i] = new StackItem();
+                items[i] = new StackItem(this);
                 if(Items[i]?.Item != null)
                 {
-                    items[i].Item = Instantiate(Items[i].Item);
+                    items[i].InsertItem(Instantiate(Items[i].Item));
                     items[i].StackCount = Items[i].StackCount;
                 }
             }
@@ -59,17 +64,17 @@ namespace Ezerus.Inventory
             }
             return count;
         }
-        public void RemoveAt(int index, int count)
+        public void RemoveAt(int index, int count, Inventory.DetachType detachType)
         {
             int stackCount = Items[index].StackCount;
             stackCount -= count;
             if(stackCount < 0) throw new System.Exception("Stack is less than zero!");
-            else if(stackCount == 0) Items[index].Item = null;
+            else if(stackCount == 0) Items[index].InsertItem(null);
             
             Items[index].StackCount = stackCount;
             OnInventoryChanged.Invoke(index);
         }
-        public void RemoveItems(Item item, int requiredCount)
+        public void RemoveItems(Item item, int requiredCount, Inventory.DetachType detachType)
         {
             int index = 0;
             foreach(StackItem currentItem in Items)
@@ -84,8 +89,8 @@ namespace Ezerus.Inventory
                     else
                     {
                         requiredCount -= currentItem.StackCount;
-                        currentItem.Item = null;
                         currentItem.StackCount = 0;
+                        currentItem.InsertItem(null);
                     }
                     OnInventoryChanged?.Invoke(index);
                 }
@@ -96,8 +101,8 @@ namespace Ezerus.Inventory
         public void SetInventoryItem(int index, StackItem item)
         {
             Inventory.StackItem oldItem = Items[index];
-            item.Item.OnAttach(AttachedEntity);
-            Items[index] = item;
+            Items[index].InsertItem(item.Item);
+            Items[index].StackCount = item.StackCount;
             if(oldItem != null && oldItem.Equals(item) == false) OnInventoryChanged.Invoke(index);
         }
         public bool AddItem(Inventory.StackItem item)
@@ -106,8 +111,7 @@ namespace Ezerus.Inventory
             {
                 int index = GetFreeSlotIndex();
                 if(index == IndexNotFound) return false;
-                Items[index] = item;
-                item.Item.UserInventoryPosition = index;
+                Items[index].InsertItem(item.Item);
                 OnInventoryChanged.Invoke(index);
                 return true;
             }
@@ -137,8 +141,7 @@ namespace Ezerus.Inventory
                     }
                     else if(newSlotPosition != IndexNotFound)
                     {
-                        Items[newSlotPosition].Item = item.Item;
-                        item.Item.UserInventoryPosition = newSlotPosition;
+                        item.InsertItem(item.Item);
 
                         if(unhandledItems <= item.Item.GetMaxStackCount())
                         {
@@ -160,10 +163,7 @@ namespace Ezerus.Inventory
                 return false;
             }
         }
-        public StackItem GetItem(int index)
-        {
-            return Items[index];
-        }
+        public StackItem GetItem(int index) => Items[index];
         private int GetFreeItemstack(Item item)
         {
             for(int i = 0; i < Items.Length; i++)
@@ -182,7 +182,24 @@ namespace Ezerus.Inventory
         [System.Serializable]
         public class StackItem
         {
-            public Item Item;
+            internal Inventory Inventory { get; set; }
+            [field: SerializeField] public Item Item { get; private set; }
+            public int UserInventoryPosition { get; internal set; }
+            internal StackItem(Inventory inventory) => Inventory = inventory;
+            public void InsertItem(Item item, Inventory.DetachType detachType = Inventory.DetachType.Destroyed)
+            {
+                Item = item;
+                if(item != null) 
+                {
+                    Item.StackItem = this;
+                    item.OnAttach(Inventory.AttachedEntity);
+                }
+                else
+                {
+                    Item?.OnDetach(Inventory.AttachedEntity, detachType);
+                    Item = item;
+                }
+            }
             public int StackCount = 1;
         }
     }

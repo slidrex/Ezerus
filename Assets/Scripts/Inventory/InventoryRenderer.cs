@@ -8,6 +8,7 @@ namespace Ezerus.Inventory
         [SerializeField] private Transform slotHolder;
         [SerializeField] private Transform hotBarHolder;
         [SerializeField] private Inventory attachedInventory;
+        private InventoryDropExtension dropExtension;
         private InventorySlot[] slots;
         private InventoryState state;
         private InventorySlot holdingSlotInstance;
@@ -23,6 +24,7 @@ namespace Ezerus.Inventory
         }
         private void Awake()
         {
+            dropExtension = attachedInventory.gameObject.GetComponent<InventoryDropExtension>();
             attachedInventory.OnInventoryChanged += RenderSlot;
             canvasRect = canvas.GetComponent<RectTransform>();
             InitSlots();

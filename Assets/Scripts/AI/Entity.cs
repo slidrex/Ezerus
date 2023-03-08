@@ -7,7 +7,7 @@ public class Entity : MonoBehaviour, IRuleHandler
     [SerializeField] private int maxHealth;
     public int Health { get; private set; }
     public List<IRuleHandler.Rule> Rules { get; private set; }
-    public Action<IRuleHandler.Rule> RuleChangeCallback { get; set; }
+    public Action<IRuleHandler.Rule, IRuleHandler.ChangeType> RuleChangeCallback { get; set; }
     protected virtual void Awake() => Rules = new List<IRuleHandler.Rule>();
     private Dictionary<EntityAttribute.Attribute, EntityAttribute> attributes = new Dictionary<EntityAttribute.Attribute, EntityAttribute>();
     public void RegisterAttribute(System.Action<float> set, System.Func<float> get, float sourceValue, EntityAttribute.Attribute tag) => attributes.Add(tag, new EntityAttribute(set, get, sourceValue));
@@ -45,12 +45,12 @@ public class Entity : MonoBehaviour, IRuleHandler
     public void AddRule(IRuleHandler.Rule rule) 
     {
         Rules.Add(rule);
-        RuleChangeCallback.Invoke(rule);
+        RuleChangeCallback.Invoke(rule, IRuleHandler.ChangeType.Add);
     }
     public void RemoveRule(IRuleHandler.Rule rule) 
     {
         Rules.Remove(rule);
-        RuleChangeCallback.Invoke(rule);
+        RuleChangeCallback.Invoke(rule, IRuleHandler.ChangeType.Remove);
     }
     public bool ContainsRule(IRuleHandler.Rule rule) => Rules.Contains(rule);
 }

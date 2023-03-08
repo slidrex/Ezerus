@@ -24,13 +24,13 @@ namespace Ezerus.Inventory
         public string Description;
         public Sprite Sprite;
         public Rarity Quality;
-        public int UserInventoryPosition;
+        public Inventory.StackItem StackItem;
         public abstract Type ItemType { get; }
         public abstract ushort MaxStackCount { get; protected set; }
         public virtual void Update() {}
         public bool IsStackable() => MaxStackCount > 1;
         public virtual void OnAttach(Entity entity) {}
-        public virtual void OnDetach(Entity entity) {}
+        public virtual void OnDetach(Entity entity, Inventory.DetachType detachType) {}
         public int GetMaxStackCount() => MaxStackCount;
         public void PrimaryUse(Entity entity) => OnItemPrimaryUse(entity);
         public void SecondaryUse(Entity entity) => OnItemSecondaryUse(entity);

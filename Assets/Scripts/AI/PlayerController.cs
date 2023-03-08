@@ -11,11 +11,20 @@ public class PlayerController : EntityMovement
     [SerializeField] private float sprintSpeedMultiplier;
     private EntityAttribute.PercentClaim sprintClaim;
     protected new Player Entity { get => base.Entity as Player; }
+    private bool blockSprint;
     private float cameraRotation;
     protected override void Awake()
     {
         base.Awake();
+        Entity.RuleChangeCallback += RuleChangeCallback;
         staminaHolder = Entity as IStaminaHolder;
+    }
+    private void RuleChangeCallback(IRuleHandler.Rule rule, IRuleHandler.ChangeType changeType)
+    {
+        if(rule == IRuleHandler.Rule.BlockPlayerSprint)
+        {
+            blockSprint = Entity.ContainsRule(rule);
+        }
     }
     protected override void Update()
     {
@@ -30,7 +39,7 @@ public class PlayerController : EntityMovement
     {
         if(Input.GetAxisRaw("Vertical") > 0 && Input.GetKey(sprintKey))
         {
-            if(staminaHolder.StaminaHolder.TryConsume(Time.deltaTime * sprintStaminaConsumption))
+            if(Entity.ContainsRule(IRuleHandler.Rule.BlockPlayerSprint) == false && staminaHolder.StaminaHolder.TryConsume(Time.deltaTime * sprintStaminaConsumption))
             {
                 if(sprintClaim.NullOrDeleted())
                 {

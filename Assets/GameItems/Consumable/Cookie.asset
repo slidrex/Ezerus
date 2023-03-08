@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 761f52c269e8e6141a46c36c585b46d8, type: 3}
+  m_Name: Cookie
+  m_EditorClassIdentifier: 
+  Name: Cookie
+  Description: Restores stamina
+  Sprite: {fileID: 21300000, guid: 7ee48c5fba4919649a8a6094cbead669, type: 3}
+  Quality: 0
+  StackItem:
+    <Item>k__BackingField: {fileID: 0}
+    StackCount: 0
+  <MaxStackCount>k__BackingField: 8
+  ConsumeSpeedModifier: -0.8
+  ConsumeTime: 0.6
+  restoreStamina: 15

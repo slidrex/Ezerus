@@ -23,7 +23,7 @@ public class EntityMovement : MonoBehaviour
         Entity.RegisterAttribute((float v) => MovementSpeed = v, () => MovementSpeed, movementSpeed, EntityAttribute.Attribute.MovementSpeed);
         GravityScale = gravityScale;
     }
-    private void OnRuleChanged(IRuleHandler.Rule rule)
+    private void OnRuleChanged(IRuleHandler.Rule rule, IRuleHandler.ChangeType changeType)
     {
         BlockCamera = Entity.ContainsRule(IRuleHandler.Rule.BlockCamera);
         BlockMovement = Entity.ContainsRule(IRuleHandler.Rule.BlockMovement);

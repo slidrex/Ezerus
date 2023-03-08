@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class StaminaHolder : MonoBehaviour
 {
-    [SerializeField] private float maxStamina;
+    [field: SerializeField] public float MaxStamina { get; private set; }
     [SerializeField] private float staminaRegenerationSpeed;
     [SerializeField] private float staminaRegenerationDelayTime;
     private float timeSinceStaminaConsumed;
-    [field:SerializeField] public float CurrentStamina { get; set; }
+    [field:SerializeField] public float CurrentStamina { get; private set; }
     private void Awake()
     {
-        CurrentStamina = maxStamina;
+        CurrentStamina = MaxStamina;
     }
     public bool TryConsume(float consumption)
     {
@@ -21,14 +21,15 @@ public class StaminaHolder : MonoBehaviour
         }
         return false;
     }
+    public void AddStamina(float stamina) => CurrentStamina = Mathf.Clamp(CurrentStamina + stamina, 0.0f, MaxStamina);
     private void Update()
     {
         if(timeSinceStaminaConsumed < staminaRegenerationDelayTime)
         {
             timeSinceStaminaConsumed += Time.deltaTime;
-        }else if(CurrentStamina < maxStamina)
+        }else if(CurrentStamina < MaxStamina)
         {
-            CurrentStamina = Mathf.Clamp(CurrentStamina += Time.deltaTime * staminaRegenerationSpeed, 0.0f, maxStamina);
+            CurrentStamina = Mathf.Clamp(CurrentStamina += Time.deltaTime * staminaRegenerationSpeed, 0.0f, MaxStamina);
         }
     }
 }

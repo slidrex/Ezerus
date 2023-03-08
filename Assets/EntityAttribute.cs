@@ -66,7 +66,7 @@ public class EntityAttribute
         }
         public bool TryRemove()
         {
-            if(deleted == false)
+            if(deleted == false && attribute != null)
             {
                 Remove();
                 return true;

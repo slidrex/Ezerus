@@ -6,7 +6,6 @@ namespace Ezerus.Inventory
     {
         public override Type ItemType => Type.Ability;
         protected Entity User { get; private set; }
-        public override ushort MaxStackCount { get; protected set; } = 1;
         public float AbilityDuration;
         private float timeSinceAbilityUsed;
         [field: SerializeField] protected override float Cooldown {get; set;}
@@ -18,7 +17,7 @@ namespace Ezerus.Inventory
             cooldownTable = (User as Ezerus.UI.ICooldownTableHandler).Table;
             StartCooldown();
         }
-        public override void OnDetach(Entity entity)
+        public override void OnDetach(Entity entity, Inventory.DetachType type)
         {
             User = null;
         }

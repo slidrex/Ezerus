@@ -7,24 +7,29 @@ namespace Ezerus.Inventory
         public override Type ItemType => Type.Consumable;
         private EntityAttribute.PercentClaim consumeClaim;
         public virtual bool DeleteOnConsume { get; } = true;
-        [field:SerializeField] public override ushort MaxStackCount { get; protected set; }
+        public override ushort MaxStackCount { get; protected set; }
         [SerializeField] protected float ConsumeSpeedModifier;
         [SerializeField] protected float ConsumeTime;
+        protected virtual float ConsumeCooldown { get; } = 0.1f;
+        private float timeSinceConsume;
+        private bool handleCooldown;
         private float consumingTime;
         protected bool IsConsuming { get; set; }
-        private Entity consumer;
+        protected Entity Consumer;
         private Inventory attachedInventory;
         public override void OnAttach(Entity entity)
         {
             base.OnAttach(entity);
+            if(ConsumeCooldown > 0.0f) handleCooldown = true;
             attachedInventory = entity.GetComponent<Inventory>();
-            consumer = entity;
+            Consumer = entity;
         }
         public void InterruptConsuming(bool success)
         {
             consumingTime = 0.0f;
             consumeClaim.TryRemove();
             IsConsuming = false;
+            Consumer.RemoveRule(IRuleHandler.Rule.BlockPlayerSprint);
             if(success) 
             {
                 OnConsumeSuccess();
@@ -37,10 +42,19 @@ namespace Ezerus.Inventory
         {
             base.Update();
             if(IsConsuming) HandleConsumeTime();
+            if(handleCooldown) HandleCooldown();
         }
         private void DeleteItem()
         {
-            attachedInventory.RemoveAt(UserInventoryPosition, 1);
+            attachedInventory.RemoveAt(StackItem.UserInventoryPosition, 1, Inventory.DetachType.Destroyed);
+        }
+        private void HandleCooldown()
+        {
+            timeSinceConsume += Time.deltaTime;
+            if(timeSinceConsume >= ConsumeCooldown)
+            {
+                handleCooldown = false;
+            }
         }
         private void HandleConsumeTime()
         {
@@ -48,13 +62,19 @@ namespace Ezerus.Inventory
             if(consumingTime >= ConsumeTime)
             {
                 InterruptConsuming(success: true);
+                if(ConsumeCooldown > 0.0f)
+                {
+                    timeSinceConsume = 0.0f;
+                    handleCooldown = true;
+                }
             }
         }
         protected override void OnItemSecondaryUse(Entity entity)
         {
-            if(IsConsuming == false && ConsumeRequest()) 
+            if(IsConsuming == false && ConsumeRequest() && timeSinceConsume >= ConsumeCooldown) 
             {
                 OnConsumeStarted();
+                entity.AddRule(IRuleHandler.Rule.BlockPlayerSprint);
                 IsConsuming = true;
                 consumeClaim = entity.GetAttribute(EntityAttribute.Attribute.MovementSpeed).AddPercent(ConsumeSpeedModifier);
             }

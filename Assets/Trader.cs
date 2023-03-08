@@ -48,7 +48,7 @@ namespace Ezerus.Trader
         {
             if(CanBuy(Items[index].PriceItem, Items[index].Price))
             {
-                entityInventory.RemoveItems(Items[index].PriceItem, (int)Items[index].Price);
+                entityInventory.RemoveItems(Items[index].PriceItem, (int)Items[index].Price, Inventory.Inventory.DetachType.Destroyed);
                 entityInventory.AddItem(Items[index].SellItem);
                 return true;
             }
